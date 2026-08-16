@@ -1,8 +1,10 @@
-# fly.toml app configuration for d3d-render
-# See https://fly.io/docs/reference/configuration/
+# fly.toml app configuration file generated for d3d-render on 2026-08-16T15:48:32Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = 'd3d-render'
-primary_region = 'den'
+primary_region = 'ams'
 
 [build]
 
@@ -10,7 +12,7 @@ primary_region = 'den'
   PORT = '3000'
 
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -21,3 +23,4 @@ primary_region = 'den'
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256
