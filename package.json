@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "lint": "eslint . --ext .js,.mjs,.cjs --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix",
     "test": "vitest run",
     "format": "prettier --write src/",
     "prepare": "husky"
