@@ -2,7 +2,8 @@ FROM node:22-slim AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --omit=dev --no-audit --no-fund
+ENV HUSKY=0
+RUN npm ci --omit=dev --no-audit --no-fund --ignore-scripts
 
 COPY . .
 

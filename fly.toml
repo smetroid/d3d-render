@@ -2,7 +2,7 @@
 # See https://fly.io/docs/reference/configuration/
 
 app = 'd3d-render'
-primary_region = 'den'
+primary_region = 'dfw'
 
 [build]
 
