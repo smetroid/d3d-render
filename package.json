@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@fastify/rate-limit": "^11.2.0",
+    "@resvg/resvg-js": "^2.6.2",
     "cytoscape": "^3.34.1",
     "cytoscape-dagre": "^4.0.0",
     "dagre": "^0.8.5",

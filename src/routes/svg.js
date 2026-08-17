@@ -2,6 +2,7 @@ import { createHash } from 'crypto'
 import { decode } from '../render/decode.js'
 import { graphlibToCyElements, validateGraphlib } from '../render/graphlibToCy.js'
 import { renderSvg } from '../render/renderSvg.js'
+import { cacheKey, cacheGet, cachePut, cacheReadStream } from '../cache.js'
 
 const RENDERER_VERSION = '1'
 const D3D_API_BASE = process.env.D3D_API_BASE || 'https://d3d-api.fly.dev'
@@ -14,7 +15,7 @@ function etag(key) {
   return '"' + createHash('sha256').update(key).digest('hex').slice(0, 24) + '"'
 }
 
-function wrapSvgLink(svgStr, href) {
+export function wrapSvgLink(svgStr, href) {
   return svgStr
     .replace(/^(<svg[^>]*>)/, `$1<a xlink:href="${href}" target="_blank" rel="noopener">`)
     .replace(/<\/svg>$/, '</a></svg>')
@@ -33,69 +34,70 @@ async function fetchPublicDag(id, ifNoneMatch) {
   }
 }
 
-export async function svgHandler(request, reply) {
+export async function resolveGraphlib(request, reply) {
   const { src, id, layout = 'dagre', theme = 'dark' } = request.query
 
   if (!src && !id) {
-    return reply.code(400).send({ error: 'Either ?src= or ?id= is required' })
+    reply.code(400).send({ error: 'Either ?src= or ?id= is required' })
+    return null
   }
 
-  let graphlibJson
-  let deepLinkUrl
-  let responseEtag
+  let graphlibJson, deepLinkUrl, responseEtag
 
   if (src) {
-    // ?src= path: decode inline diagram
     try {
       graphlibJson = decode(src)
     } catch (e) {
-      return reply.code(e.statusCode || 400).send({ error: e.message })
+      reply.code(e.statusCode || 400).send({ error: e.message })
+      return null
     }
     try {
       validateGraphlib(graphlibJson)
     } catch (e) {
-      return reply.code(400).send({ error: e.message })
+      reply.code(400).send({ error: e.message })
+      return null
     }
     deepLinkUrl = `${D3DWEB_BASE}/?src=${encodeURIComponent(src)}`
     responseEtag = etag(`src:${src}:${layout}:${theme}:v${RENDERER_VERSION}`)
   } else {
-    // ?id= path: fetch from d3d-api public endpoint
     const upstreamIfNoneMatch = request.headers['if-none-match']
     let upstreamRes
     try {
       upstreamRes = await fetchPublicDag(id, upstreamIfNoneMatch)
     } catch {
-      const placeholder = buildPlaceholderSvg(theme, 'Diagram unavailable')
-      return reply.code(200).header('Content-Type', 'image/svg+xml').send(placeholder)
+      return { placeholder: true, theme }
     }
 
     if (upstreamRes.status === 404) {
-      return reply.code(404).send({ error: 'Diagram not found or not public' })
+      reply.code(404).send({ error: 'Diagram not found or not public' })
+      return null
     }
     if (upstreamRes.status === 304) {
-      return reply.code(304).send()
+      reply.code(304).send()
+      return null
     }
     if (!upstreamRes.ok) {
-      const placeholder = buildPlaceholderSvg(theme, 'Diagram unavailable')
-      return reply.code(200).header('Content-Type', 'image/svg+xml').send(placeholder)
+      return { placeholder: true, theme }
     }
 
     let body
     try {
       body = await upstreamRes.json()
     } catch {
-      return reply.code(502).send({ error: 'Invalid response from upstream' })
+      reply.code(502).send({ error: 'Invalid response from upstream' })
+      return null
     }
-
     try {
       graphlibJson = JSON.parse(body.diagram)
     } catch {
-      return reply.code(502).send({ error: 'Diagram data is not valid JSON' })
+      reply.code(502).send({ error: 'Diagram data is not valid JSON' })
+      return null
     }
     try {
       validateGraphlib(graphlibJson)
     } catch (e) {
-      return reply.code(502).send({ error: e.message })
+      reply.code(502).send({ error: e.message })
+      return null
     }
 
     deepLinkUrl = `${D3DWEB_BASE}/?id=${encodeURIComponent(id)}`
@@ -103,8 +105,46 @@ export async function svgHandler(request, reply) {
     responseEtag = etag(`id:${upstreamEtag}:${layout}:${theme}:v${RENDERER_VERSION}`)
 
     if (upstreamIfNoneMatch && upstreamIfNoneMatch === responseEtag) {
-      return reply.code(304).send()
+      reply.code(304).send()
+      return null
     }
+  }
+
+  return { graphlibJson, deepLinkUrl, responseEtag, layout, theme }
+}
+
+export function buildPlaceholderSvg(theme, message) {
+  const bg = theme === 'light' ? '#f5f6fa' : '#12131a'
+  const fg = theme === 'light' ? '#546070' : '#8890b0'
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="80" viewBox="0 0 320 80"><rect width="100%" height="100%" fill="${bg}"/><text x="160" y="44" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="${fg}" font-family="system-ui, sans-serif">${message}</text></svg>`
+}
+
+export async function svgHandler(request, reply) {
+  const { layout = 'dagre', theme = 'dark' } = request.query
+
+  const resolved = await resolveGraphlib(request, reply)
+  if (!resolved) return
+  if (resolved.placeholder) {
+    return reply
+      .code(200)
+      .header('Content-Type', 'image/svg+xml')
+      .send(buildPlaceholderSvg(resolved.theme, 'Diagram unavailable'))
+  }
+
+  const { graphlibJson, deepLinkUrl, responseEtag } = resolved
+
+  // Check cache
+  const key = cacheKey([resolved.responseEtag])
+  const cached = await cacheGet(key, 'svg')
+  if (cached) {
+    return reply
+      .code(200)
+      .header('Content-Type', 'image/svg+xml; charset=utf-8')
+      .header('Cache-Control', CACHE_CONTROL)
+      .header('ETag', responseEtag)
+      .header('Access-Control-Allow-Origin', '*')
+      .header('X-Cache', 'HIT')
+      .send(cacheReadStream(cached))
   }
 
   let svgStr
@@ -117,17 +157,14 @@ export async function svgHandler(request, reply) {
 
   svgStr = wrapSvgLink(svgStr, deepLinkUrl)
 
+  cachePut(key, 'svg', svgStr).catch(() => {})
+
   return reply
     .code(200)
     .header('Content-Type', 'image/svg+xml; charset=utf-8')
     .header('Cache-Control', CACHE_CONTROL)
     .header('ETag', responseEtag)
     .header('Access-Control-Allow-Origin', '*')
+    .header('X-Cache', 'MISS')
     .send(svgStr)
-}
-
-function buildPlaceholderSvg(theme, message) {
-  const bg = theme === 'light' ? '#f5f6fa' : '#12131a'
-  const fg = theme === 'light' ? '#546070' : '#8890b0'
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="80" viewBox="0 0 320 80"><rect width="100%" height="100%" fill="${bg}"/><text x="160" y="44" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="${fg}" font-family="system-ui, sans-serif">${message}</text></svg>`
 }

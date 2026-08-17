@@ -1,6 +1,8 @@
 import Fastify from 'fastify'
 import rateLimit from '@fastify/rate-limit'
 import { svgHandler } from './routes/svg.js'
+import { pngHandler } from './routes/png.js'
+import { cacheMetrics } from './cache.js'
 
 const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX) || 60
 const MAX_URL_BYTES = 8 * 1024
@@ -29,6 +31,18 @@ export async function build(opts = {}) {
 
   app.get('/health', async () => ({ status: 'ok' }))
   app.get('/svg', svgHandler)
+  app.get('/png', pngHandler)
+  app.get('/metrics', async () => {
+    const m = cacheMetrics()
+    return [
+      `# HELP d3d_render_cache_hits_total Cache hits`,
+      `# TYPE d3d_render_cache_hits_total counter`,
+      `d3d_render_cache_hits_total ${m.hits}`,
+      `# HELP d3d_render_cache_misses_total Cache misses`,
+      `# TYPE d3d_render_cache_misses_total counter`,
+      `d3d_render_cache_misses_total ${m.misses}`
+    ].join('\n')
+  })
 
   return app
 }

@@ -21,7 +21,11 @@ export default [
         AbortController: 'readonly',
         AbortSignal: 'readonly',
         URL: 'readonly',
-        URLSearchParams: 'readonly'
+        URLSearchParams: 'readonly',
+        // Node.js stream utilities are imported via fs/stream — no globals needed
+        // but mark atob/btoa just in case any future code uses them
+        atob: 'readonly',
+        btoa: 'readonly'
       }
     }
   }
