@@ -10,8 +10,18 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
+        // Node.js built-ins
         console: 'readonly',
-        process: 'readonly'
+        process: 'readonly',
+        Buffer: 'readonly',
+        TextDecoder: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        fetch: 'readonly',
+        AbortController: 'readonly',
+        AbortSignal: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly'
       }
     }
   }

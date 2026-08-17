@@ -15,7 +15,12 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "fastify": "^5.1.0"
+    "@fastify/rate-limit": "^11.2.0",
+    "cytoscape": "^3.34.1",
+    "cytoscape-dagre": "^4.0.0",
+    "dagre": "^0.8.5",
+    "fastify": "^5.1.0",
+    "pako": "^3.0.1"
   },
   "lint-staged": {
     "*.{js,mjs,cjs}": "eslint --fix",
