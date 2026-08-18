@@ -7,20 +7,17 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "start": "node src/server.js",
+    "dev": "vercel dev",
     "lint": "eslint . --fix",
     "test": "vitest run",
-    "format": "prettier --write src/",
+    "format": "prettier --write src/ api/",
     "prepare": "husky"
   },
   "dependencies": {
-    "@fastify/rate-limit": "^11.2.0",
     "@resvg/resvg-js": "^2.6.2",
     "cytoscape": "^3.34.1",
     "cytoscape-dagre": "^4.0.0",
     "dagre": "^0.8.5",
-    "fastify": "^5.1.0",
     "pako": "^3.0.1"
   },
   "lint-staged": {

@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/svg", "destination": "/api/svg" },
+    { "source": "/png", "destination": "/api/png" },
+    { "source": "/metrics", "destination": "/api/metrics" }
+  ],
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs22.x",
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "CACHE_DIR": "/tmp/cache",
+    "D3D_API_BASE": "https://d3d-api.fly.dev",
+    "D3DWEB_BASE": "https://d3dweb.fly.dev"
+  }
+}
