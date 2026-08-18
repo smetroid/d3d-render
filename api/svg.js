@@ -3,10 +3,11 @@ import { graphlibToCyElements } from '../src/render/graphlibToCy.js'
 import { renderSvg } from '../src/render/renderSvg.js'
 import { cacheKey, cacheGet, cachePut } from '../src/cache.js'
 import { resolveParams, wrapSvgLink, buildPlaceholderSvg } from '../src/routes/resolve.js'
+import { withGuards } from '../src/middleware.js'
 
 const CACHE_CONTROL = 'public, max-age=31536000, immutable'
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { src, id, layout = 'dagre', theme = 'dark' } = req.query
   const ifNoneMatch = req.headers['if-none-match']
 
@@ -55,3 +56,5 @@ export default async function handler(req, res) {
   res.setHeader('X-Cache', 'MISS')
   return res.status(200).send(svgStr)
 }
+
+export default withGuards(handler)

@@ -17,6 +17,8 @@ export default [
         TextDecoder: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
         fetch: 'readonly',
         AbortController: 'readonly',
         AbortSignal: 'readonly',

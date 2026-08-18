@@ -4,6 +4,7 @@ import { graphlibToCyElements } from '../src/render/graphlibToCy.js'
 import { renderSvg } from '../src/render/renderSvg.js'
 import { cacheKey, cacheGet, cachePut } from '../src/cache.js'
 import { resolveParams, wrapSvgLink, buildPlaceholderSvg } from '../src/routes/resolve.js'
+import { withGuards } from '../src/middleware.js'
 
 const MAX_WIDTH = 4096
 const CACHE_CONTROL = 'public, max-age=31536000, immutable'
@@ -18,7 +19,7 @@ function svgToPng(svgStr, width) {
   return resvg.render().asPng()
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { src, id, layout = 'dagre', theme = 'dark', width: widthParam } = req.query
   const ifNoneMatch = req.headers['if-none-match']
 
@@ -81,3 +82,5 @@ export default async function handler(req, res) {
   res.setHeader('X-Cache', 'MISS')
   return res.status(200).send(pngBuffer)
 }
+
+export default withGuards(handler)
