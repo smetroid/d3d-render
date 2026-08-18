@@ -17,8 +17,8 @@
 Turns a d3dweb diagram (referenced by public ID or encoded inline) into a static SVG or PNG suitable for embedding in a README, wiki, or any markdown surface.
 
 ```markdown
-![architecture](https://d3d-render.fly.dev/svg?id=abc123)
-![portable](https://d3d-render.fly.dev/svg?src=eJxlk...)
+![architecture](https://d3d-render.vercel.app/svg?id=abc123)
+![portable](https://d3d-render.vercel.app/svg?src=eJxlk...)
 ```
 
 Clicking the rendered image opens the diagram in a live d3dweb editor.
