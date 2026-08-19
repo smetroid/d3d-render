@@ -2,7 +2,7 @@ import { readFile } from 'fs/promises'
 import { graphlibToCyElements } from '../src/render/graphlibToCy.js'
 import { renderSvg } from '../src/render/renderSvg.js'
 import { cacheKey, cacheGet, cachePut } from '../src/cache.js'
-import { resolveParams, wrapSvgLink, buildPlaceholderSvg } from '../src/routes/resolve.js'
+import { resolveParams, buildPlaceholderSvg } from '../src/routes/resolve.js'
 import { withGuards } from '../src/middleware.js'
 
 const CACHE_CONTROL = 'public, max-age=31536000, immutable'
@@ -24,7 +24,7 @@ async function handler(req, res) {
     return res.status(200).send(buildPlaceholderSvg(resolved.theme, 'Diagram unavailable'))
   }
 
-  const { graphlibJson, deepLinkUrl, responseEtag } = resolved
+  const { graphlibJson, responseEtag } = resolved
   const key = cacheKey([responseEtag])
 
   const cached = await cacheGet(key, 'svg')
@@ -46,7 +46,6 @@ async function handler(req, res) {
     return res.status(e.statusCode || 500).json({ error: e.message })
   }
 
-  svgStr = wrapSvgLink(svgStr, deepLinkUrl)
   cachePut(key, 'svg', svgStr).catch(() => {})
 
   res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8')
