@@ -4,7 +4,7 @@ import { validateGraphlib } from '../render/graphlibToCy.js'
 
 const RENDERER_VERSION = '1'
 const D3D_API_BASE = process.env.D3D_API_BASE || 'https://d3d-api.fly.dev'
-export const D3DWEB_BASE = process.env.D3DWEB_BASE || 'https://d3dweb.fly.dev'
+export const D3DWEB_BASE = process.env.D3DWEB_BASE || 'https://d3dweb.vercel.app'
 const UPSTREAM_TIMEOUT_MS = 5000
 
 export function makeEtag(key) {
