@@ -1,0 +1,22 @@
+# Changelog
+
+## [0.2.0](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.1.0...d3d-render-v0.2.0) (2026-08-19)
+
+
+### Features
+
+* **guards:** per-ip rate limit, non-get rejection, render timeout, request logging ([3de5198](https://github.com/smetroid/d3d-render/commit/3de51989f7bb69b5951fdec9123230ef99e05ae4))
+* initial scaffold ([5ee86d6](https://github.com/smetroid/d3d-render/commit/5ee86d62eba5e895a957ad519cfd1834411ded31))
+* **render:** add cola layout support (headless, no puppeteer needed) ([e212678](https://github.com/smetroid/d3d-render/commit/e21267800a20f95024ea4f6dc1bfb20e7b486f50))
+* **render:** core SVG render pipeline + rate limiting ([167b3a3](https://github.com/smetroid/d3d-render/commit/167b3a3f37878128577e96a300b24ab3b3e7877f))
+* **render:** png endpoint + content-addressed cache + /metrics ([110615c](https://github.com/smetroid/d3d-render/commit/110615c7a920612274d793e9f027c8bf1aee3b45))
+* **vercel:** migrate from Fly.io/Fastify to Vercel serverless functions ([cd941d4](https://github.com/smetroid/d3d-render/commit/cd941d4076d53e437254a0c1e25badbe7f7436ab))
+
+
+### Bug Fixes
+
+* **deploy:** use dfw region + skip husky in prod install ([3db7d96](https://github.com/smetroid/d3d-render/commit/3db7d966975f0275fe98871e285f8b13543119df))
+* update lint script for ESLint 9 flat config ([2122a08](https://github.com/smetroid/d3d-render/commit/2122a08a77eec5e9d9d9d52ac0163efccd7cf8b0))
+* **vercel:** disable framework detection so api/ functions are used directly ([d5a8e2d](https://github.com/smetroid/d3d-render/commit/d5a8e2d7fcb8b16c2bd7b71820ef5ea0bb706e98))
+* **vercel:** remove invalid runtime field, node version comes from engines.node ([3a0e63d](https://github.com/smetroid/d3d-render/commit/3a0e63de9a9905c86aa5a1269b30704b8494b26c))
+* **vercel:** rename server.test.js to avoid entrypoint detection, add .vercelignore ([2a5bb3b](https://github.com/smetroid/d3d-render/commit/2a5bb3b3667829668b36d1102db4bd778d068504))
