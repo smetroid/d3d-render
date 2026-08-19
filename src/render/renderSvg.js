@@ -1,8 +1,10 @@
 import Cytoscape from 'cytoscape'
 import cytoscapeDagre from 'cytoscape-dagre'
+import cytoscapeCola from 'cytoscape-cola'
 import { THEMES } from './themes.js'
 
 Cytoscape.use(cytoscapeDagre)
+Cytoscape.use(cytoscapeCola)
 
 const NODE_W = 140
 const NODE_H = 40
@@ -12,6 +14,7 @@ const LAYOUT_TIMEOUT_MS = 8000
 
 const SUPPORTED_LAYOUTS = new Set([
   'dagre',
+  'cola',
   'breadthfirst',
   'grid',
   'circle',
@@ -76,7 +79,9 @@ export async function renderSvg(elements, { layout = 'dagre', theme = 'dark' } =
     cy.layout(
       layoutName === 'dagre'
         ? { name: 'dagre', rankDir: 'LR', nodeSep: 50, rankSep: 90 }
-        : { name: layoutName }
+        : layoutName === 'cola'
+          ? { name: 'cola', animate: false }
+          : { name: layoutName }
     ).run()
   })
 

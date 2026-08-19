@@ -16,6 +16,7 @@
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
     "cytoscape": "^3.34.1",
+    "cytoscape-cola": "^2.5.1",
     "cytoscape-dagre": "^4.0.0",
     "dagre": "^0.8.5",
     "pako": "^3.0.1"
