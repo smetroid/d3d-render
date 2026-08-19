@@ -12,7 +12,7 @@
   },
   "env": {
     "CACHE_DIR": "/tmp/cache",
-    "D3D_API_BASE": "https://d3d-api.fly.dev",
+    "D3D_API_BASE": "https://d3d-api.vercel.app",
     "D3DWEB_BASE": "https://d3dweb.vercel.app"
   }
 }
