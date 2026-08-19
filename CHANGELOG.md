@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.1](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.2.0...d3d-render-v0.2.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* **cache:** bump renderer version to invalidate cached bad svgs ([bc3e207](https://github.com/smetroid/d3d-render/commit/bc3e2074a927a02640051352c8b7c5fd3c7ed669))
+* **render:** use nodes boundingBox to avoid bogus edge extents in headless mode ([74a7042](https://github.com/smetroid/d3d-render/commit/74a7042bcdda9b4d4032b56cbc8e316aea87c690))
+* **svg:** remove xlink anchor wrapper, github sanitizer strips it causing black box ([9b9b219](https://github.com/smetroid/d3d-render/commit/9b9b21993ff3d130898f454a7bfe701ef48784e7))
+
 ## [0.2.0](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.1.0...d3d-render-v0.2.0) (2026-08-19)
 
 
