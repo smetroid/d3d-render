@@ -7,7 +7,7 @@ import { resolveParams, wrapSvgLink, buildPlaceholderSvg } from '../src/routes/r
 import { withGuards } from '../src/middleware.js'
 
 const MAX_WIDTH = 4096
-const CACHE_CONTROL = 'public, max-age=31536000, immutable'
+const CACHE_CONTROL = 'public, max-age=86400, stale-while-revalidate=604800'
 
 function svgNaturalWidth(svgStr) {
   const m = svgStr.match(/width="(\d+)"/)

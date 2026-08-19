@@ -5,7 +5,7 @@ import { cacheKey, cacheGet, cachePut } from '../src/cache.js'
 import { resolveParams, buildPlaceholderSvg } from '../src/routes/resolve.js'
 import { withGuards } from '../src/middleware.js'
 
-const CACHE_CONTROL = 'public, max-age=31536000, immutable'
+const CACHE_CONTROL = 'public, max-age=86400, stale-while-revalidate=604800'
 
 async function handler(req, res) {
   const { src, id, layout = 'dagre', theme = 'dark' } = req.query
