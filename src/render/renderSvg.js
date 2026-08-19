@@ -85,7 +85,10 @@ export async function renderSvg(elements, { layout = 'dagre', theme = 'dark' } =
     ).run()
   })
 
-  const ext = cy.extent()
+  // Use nodes-only bounding box — cy.extent() includes edge control points
+  // which are bogus in headless mode and produce astronomically large extents.
+  const bb = cy.nodes().boundingBox()
+  const ext = { x1: bb.x1, y1: bb.y1, w: bb.w, h: bb.h }
   const svgW = Math.max(Math.ceil(ext.w + PAD * 2), 200)
   const svgH = Math.max(Math.ceil(ext.h + PAD * 2), 100)
   const ox = -ext.x1 + PAD
