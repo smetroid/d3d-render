@@ -50,7 +50,7 @@ export async function resolveParams({ src, id, layout = 'dagre', theme = 'dark',
     }
     const deepLinkUrl = `${D3DWEB_BASE}/?src=${encodeURIComponent(src)}`
     const responseEtag = makeEtag(`src:${src}:${layout}:${theme}:v${RENDERER_VERSION}`)
-    return { graphlibJson, deepLinkUrl, responseEtag, layout, theme }
+    return { graphlibJson, deepLinkUrl, responseEtag, layout, theme, embedRevision: null }
   }
 
   // ?id= path
@@ -103,5 +103,12 @@ export async function resolveParams({ src, id, layout = 'dagre', theme = 'dark',
     return { statusCode: 304 }
   }
 
-  return { graphlibJson, deepLinkUrl, responseEtag, layout, theme }
+  return {
+    graphlibJson,
+    deepLinkUrl,
+    responseEtag,
+    layout,
+    theme,
+    embedRevision: body.embedRevision ?? null
+  }
 }

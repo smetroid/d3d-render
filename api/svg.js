@@ -24,7 +24,7 @@ async function handler(req, res) {
     return res.status(200).send(buildPlaceholderSvg(resolved.theme, 'Diagram unavailable'))
   }
 
-  const { graphlibJson, responseEtag } = resolved
+  const { graphlibJson, responseEtag, embedRevision } = resolved
   const key = cacheKey([responseEtag])
 
   const cached = await cacheGet(key, 'svg')
@@ -35,6 +35,7 @@ async function handler(req, res) {
     res.setHeader('ETag', responseEtag)
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('X-Cache', 'HIT')
+    if (embedRevision != null) res.setHeader('X-Embed-Revision', String(embedRevision))
     return res.status(200).send(data)
   }
 
@@ -53,6 +54,8 @@ async function handler(req, res) {
   res.setHeader('ETag', responseEtag)
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('X-Cache', 'MISS')
+  res.setHeader('X-Rendered-At', new Date().toISOString())
+  if (embedRevision != null) res.setHeader('X-Embed-Revision', String(embedRevision))
   return res.status(200).send(svgStr)
 }
 
