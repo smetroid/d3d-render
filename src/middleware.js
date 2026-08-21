@@ -51,10 +51,15 @@ export function withGuards(handler) {
     const ip = getClientIp(req)
     const path = (req.url || '').split('?')[0]
 
-    if (req.method !== 'GET') {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
       log('warn', 'method_not_allowed', { ip, method: req.method, path })
-      res.setHeader('Allow', 'GET')
+      res.setHeader('Allow', 'GET, HEAD')
       return res.status(405).json({ error: 'Method Not Allowed' })
+    }
+
+    if (req.method === 'HEAD') {
+      const origSend = res.send.bind(res)
+      res.send = () => origSend('')
     }
 
     const urlLen = (req.url || '').length
