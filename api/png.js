@@ -21,7 +21,8 @@ import { resolveParams, wrapSvgLink, buildPlaceholderSvg } from '../src/routes/r
 import { withGuards } from '../src/middleware.js'
 
 const MAX_WIDTH = 4096
-const CACHE_CONTROL = 'public, max-age=86400, stale-while-revalidate=604800'
+const CACHE_CONTROL_IMMUTABLE = 'public, max-age=86400, stale-while-revalidate=604800'
+const CACHE_CONTROL_LIVE = 'public, max-age=0, must-revalidate'
 
 function svgNaturalWidth(svgStr) {
   const m = svgStr.match(/width="(\d+)"/)
@@ -51,14 +52,15 @@ async function handler(req, res) {
     return res.status(200).send(png)
   }
 
-  const { graphlibJson, deepLinkUrl, responseEtag } = resolved
+  const { graphlibJson, deepLinkUrl, responseEtag, embedRevision } = resolved
+  const cacheControl = embedRevision != null ? CACHE_CONTROL_LIVE : CACHE_CONTROL_IMMUTABLE
   const key = cacheKey([responseEtag, 'png', widthParam || ''])
 
   const cached = await cacheGet(key, 'png')
   if (cached) {
     const data = await readFile(cached)
     res.setHeader('Content-Type', 'image/png')
-    res.setHeader('Cache-Control', CACHE_CONTROL)
+    res.setHeader('Cache-Control', cacheControl)
     res.setHeader('ETag', responseEtag)
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('X-Cache', 'HIT')
@@ -90,7 +92,7 @@ async function handler(req, res) {
   cachePut(key, 'png', pngBuffer).catch(() => {})
 
   res.setHeader('Content-Type', 'image/png')
-  res.setHeader('Cache-Control', CACHE_CONTROL)
+  res.setHeader('Cache-Control', cacheControl)
   res.setHeader('ETag', responseEtag)
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('X-Cache', 'MISS')
