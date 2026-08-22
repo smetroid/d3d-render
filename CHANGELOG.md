@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.3.0...d3d-render-v0.3.1) (2026-08-22)
+
+
+### Bug Fixes
+
+* **png:** bundle Noto Sans font for resvg text rendering ([b762327](https://github.com/smetroid/d3d-render/commit/b762327ab161422ea51d9efc93541942e71cfa30))
+* **png:** bundle Noto Sans font for resvg text rendering ([db1bb5a](https://github.com/smetroid/d3d-render/commit/db1bb5ac1ea60704ac75ed8b3c8f6c8c28d14be7))
+
 ## [0.3.0](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.2.1...d3d-render-v0.3.0) (2026-08-22)
 
 
