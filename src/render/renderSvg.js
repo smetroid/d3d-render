@@ -9,7 +9,7 @@ Cytoscape.use(cytoscapeCola)
 const NODE_W = 140
 const NODE_H = 40
 const PAD = 40
-const FONT = "system-ui, 'Segoe UI', Roboto, sans-serif"
+const FONT = "'Noto Sans', system-ui, sans-serif"
 const LAYOUT_TIMEOUT_MS = 8000
 
 const SUPPORTED_LAYOUTS = new Set([

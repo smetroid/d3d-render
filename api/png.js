@@ -1,5 +1,19 @@
 import { readFile } from 'fs/promises'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { Resvg } from '@resvg/resvg-js'
+
+const FONT_PATH = join(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'fonts',
+  'NotoSans-Regular.ttf'
+)
+const RESVG_FONT_OPTS = {
+  fontFiles: [FONT_PATH],
+  loadSystemFonts: false,
+  defaultFontFamily: 'Noto Sans'
+}
 import { graphlibToCyElements } from '../src/render/graphlibToCy.js'
 import { renderSvg } from '../src/render/renderSvg.js'
 import { cacheKey, cacheGet, cachePut } from '../src/cache.js'
@@ -15,7 +29,7 @@ function svgNaturalWidth(svgStr) {
 }
 
 function svgToPng(svgStr, width) {
-  const resvg = new Resvg(svgStr, { fitTo: { mode: 'width', value: width } })
+  const resvg = new Resvg(svgStr, { fitTo: { mode: 'width', value: width }, font: RESVG_FONT_OPTS })
   return resvg.render().asPng()
 }
 
