@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.2.1...d3d-render-v0.3.0) (2026-08-22)
+
+
+### Features
+
+* add HEAD method support to withGuards middleware ([90f7348](https://github.com/smetroid/d3d-render/commit/90f7348a4b912f84c99f4842c61d93b05dbeca25))
+* add HEAD method support to withGuards middleware ([33b20cc](https://github.com/smetroid/d3d-render/commit/33b20cc84cb7f2e2aa7be7b957dcd1a2e5c4d4df))
+* add X-Embed-Revision and X-Rendered-At response headers ([fb8febf](https://github.com/smetroid/d3d-render/commit/fb8febfc8477a29638d9479980ddac5974a9ab35))
+* add X-Embed-Revision and X-Rendered-At response headers ([c0074d0](https://github.com/smetroid/d3d-render/commit/c0074d065e41abce179c25660b97cdc480b1f2be))
+
+
+### Bug Fixes
+
+* **cache:** use 24h max-age with swr instead of immutable to allow re-fetch after fixes ([2bd9a50](https://github.com/smetroid/d3d-render/commit/2bd9a50c1c76fe3ce8634dca6581eac121d82ba6))
+* use must-revalidate cache for live ?id= embeds ([5186bd8](https://github.com/smetroid/d3d-render/commit/5186bd85f5a1662e5c5d633ef28c79c7c1be9668))
+* use must-revalidate for ?id= embeds, immutable cache for ?src= ([1de4943](https://github.com/smetroid/d3d-render/commit/1de494381aa332b79af7ddbb1210cdb1b3fcb463))
+
 ## [0.2.1](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.2.0...d3d-render-v0.2.1) (2026-08-19)
 
 
