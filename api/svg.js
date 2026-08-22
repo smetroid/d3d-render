@@ -5,7 +5,8 @@ import { cacheKey, cacheGet, cachePut } from '../src/cache.js'
 import { resolveParams, buildPlaceholderSvg } from '../src/routes/resolve.js'
 import { withGuards } from '../src/middleware.js'
 
-const CACHE_CONTROL = 'public, max-age=86400, stale-while-revalidate=604800'
+const CACHE_CONTROL_IMMUTABLE = 'public, max-age=86400, stale-while-revalidate=604800'
+const CACHE_CONTROL_LIVE = 'public, max-age=0, must-revalidate'
 
 async function handler(req, res) {
   const { src, id, layout = 'dagre', theme = 'dark' } = req.query
@@ -25,13 +26,14 @@ async function handler(req, res) {
   }
 
   const { graphlibJson, responseEtag, embedRevision } = resolved
+  const cacheControl = embedRevision != null ? CACHE_CONTROL_LIVE : CACHE_CONTROL_IMMUTABLE
   const key = cacheKey([responseEtag])
 
   const cached = await cacheGet(key, 'svg')
   if (cached) {
     const data = await readFile(cached)
     res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8')
-    res.setHeader('Cache-Control', CACHE_CONTROL)
+    res.setHeader('Cache-Control', cacheControl)
     res.setHeader('ETag', responseEtag)
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('X-Cache', 'HIT')
@@ -50,7 +52,7 @@ async function handler(req, res) {
   cachePut(key, 'svg', svgStr).catch(() => {})
 
   res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8')
-  res.setHeader('Cache-Control', CACHE_CONTROL)
+  res.setHeader('Cache-Control', cacheControl)
   res.setHeader('ETag', responseEtag)
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('X-Cache', 'MISS')
