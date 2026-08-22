@@ -6,7 +6,7 @@ import { pipeline } from 'stream/promises'
 
 const CACHE_DIR = process.env.CACHE_DIR || '/data/cache'
 const CACHE_MAX_BYTES = (Number(process.env.CACHE_MAX_MB) || 512) * 1024 * 1024
-const RENDERER_VERSION = '1'
+const RENDERER_VERSION = '2'
 
 let hits = 0
 let misses = 0
