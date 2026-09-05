@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.3.1...d3d-render-v0.4.0) (2026-09-05)
+
+
+### Features
+
+* **deploy:** add fly.io http server, health check, and deploy workflow ([3377870](https://github.com/smetroid/d3d-render/commit/337787071e827ff4fe351c0fa5b320d66e180428))
+* **deploy:** fly.io http server, health check, and deploy workflow ([b94c276](https://github.com/smetroid/d3d-render/commit/b94c27677b430a3a35941dc2ebc2291339dd4699))
+
+
+### Bug Fixes
+
+* **cache:** bump RENDERER_VERSION to 2 to invalidate pre-font-fix PNG cache ([6a71bdc](https://github.com/smetroid/d3d-render/commit/6a71bdcc69954037e1bc46706e678e72e9c716da))
+* **cache:** bump RENDERER_VERSION to 2 to invalidate pre-font-fix PNG cache ([b342084](https://github.com/smetroid/d3d-render/commit/b342084334f105210f0f5f2e42942c3b12e590b1))
+* **png:** serve live cache-control for ?id= renders ([8d52638](https://github.com/smetroid/d3d-render/commit/8d52638ce5af86e0793cf07d5a83ab5c47ac70dc))
+* **png:** serve live cache-control for ?id= renders ([9fab932](https://github.com/smetroid/d3d-render/commit/9fab932200393df9c40bc7f2bf5cdbdc979bbb9b))
+
 ## [0.3.1](https://github.com/smetroid/d3d-render/compare/d3d-render-v0.3.0...d3d-render-v0.3.1) (2026-08-22)
 
 
